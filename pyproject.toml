@@ -1,0 +1,32 @@
+[project]
+name = "qtcodeedit"
+authors = [
+  { name="Kao Cardoso Félix", email="kcfelix@gmail.com" },
+]
+version = "0.1.0"
+description = "A code editing widget for PyQt and PySide"
+readme = "README.md"
+requires-python = ">=3.12"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "pygments>=2.18.0",
+    "pyside6>=6.7.2",
+    "qtpy>=2.4.1",
+]
+
+[project.urls]
+Homepage = "https://github.com/kaofelix/qtcodeedit"
+Issues = "https://github.com/kaofelix/qtcodeedit"
+
+[tool.uv]
+dev-dependencies = [
+    "ruff>=0.6.7",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
