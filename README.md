@@ -7,7 +7,8 @@ themes.
 
 - Syntax and theming support powered by [Pygments](https://pygments.org), so any language and theme
   supported by it can be used
-- Line numbers
+- Hide and show line numbers
+- Spaces or tabs for indentation
 
 ## Implementation
 

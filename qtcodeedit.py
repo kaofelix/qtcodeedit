@@ -1,3 +1,4 @@
+from enum import Enum
 from typing import NamedTuple
 
 from pygments import lex
@@ -8,6 +9,7 @@ from qtpy.QtCore import QEvent, QObject, QRect, Qt, Signal
 from qtpy.QtGui import (
     QColor,
     QFont,
+    QKeyEvent,
     QPainter,
     QPalette,
     QSyntaxHighlighter,
@@ -22,8 +24,15 @@ class Language(NamedTuple):
 
 
 class CodeEdit(QPlainTextEdit):
+    INDENT_SPACES_NUMBER = 4
+
+    class Indent(Enum):
+        WithSpaces = 0
+        WithTabs = 1
+
     def __init__(self):
         super().__init__()
+        self._indentation_mode = self.Indent.WithSpaces
 
         font = QFont()
         font.setFamily("Menlo")
@@ -36,6 +45,18 @@ class CodeEdit(QPlainTextEdit):
         self._updatePalette()
 
         self.lineNumberArea = LineNumberArea(self)
+
+    def keyPressEvent(self, e: QKeyEvent):
+        if self._indentation_mode == self.Indent.WithSpaces:
+            if e.key() == Qt.Key.Key_Tab:
+                self._indentWithSpaces()
+                return
+
+            if e.key() == Qt.Key.Key_Backtab:
+                self._unindentWithSpaces()
+                return
+
+        super().keyPressEvent(e)
 
     def languages(self):
         return (
@@ -59,8 +80,24 @@ class CodeEdit(QPlainTextEdit):
     def setShowLineNumbers(self, show: bool):
         self.lineNumberArea.setVisible(show)
 
+    def setIndentationMode(self, mode: Indent):
+        self._indentation_mode = mode
+
     def _updatePalette(self):
         self.setPalette(self.highlighter.stylePalette())
+
+    def _indentWithSpaces(self):
+        cursor = self.textCursor()
+        cursor.movePosition(cursor.MoveOperation.StartOfBlock)
+        cursor.insertText(" " * self.INDENT_SPACES_NUMBER)
+
+    def _unindentWithSpaces(self):
+        cursor = self.textCursor()
+        cursor.movePosition(cursor.MoveOperation.StartOfBlock)
+        text = cursor.block().text()
+        n_spaces = len(text) - len(text.lstrip(" "))
+        for _ in range(min(n_spaces, self.INDENT_SPACES_NUMBER)):
+            cursor.deleteChar()
 
 
 class PygmentsSyntaxHighlighter(QSyntaxHighlighter):
@@ -127,7 +164,7 @@ class LineNumberArea(QWidget):
     MIN_DIGITS = 3
     MARGIN_RIGHT = 3
 
-    def __init__(self, editor: "CodeEdit"):
+    def __init__(self, editor: CodeEdit):
         super().__init__(editor)
         self.editor = editor
         self.editor.installEventFilter(self)
