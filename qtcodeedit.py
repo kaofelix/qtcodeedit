@@ -75,11 +75,11 @@ class PygmentsSyntaxHighlighter(QSyntaxHighlighter):
         self.lexer = get_lexer_by_name(self.DEFAULT_LEXER)
         self.style = get_style_by_name(self.DEFAULT_STYLE)
 
-        self.format_map = self.create_format_map(self.style)
+        self.format_map = self.createFormatMap(self.style)
 
     def setStyle(self, style_name):
         self.style = get_style_by_name(style_name)
-        self.format_map = self.create_format_map(self.style)
+        self.format_map = self.createFormatMap(self.style)
         self.rehighlight()
         self.styleChanged.emit()
 
@@ -110,7 +110,7 @@ class PygmentsSyntaxHighlighter(QSyntaxHighlighter):
             index += length
 
     @staticmethod
-    def create_format_map(style):
+    def createFormatMap(style):
         def to_fmt(token_style):
             fmt = QTextCharFormat()
             fmt.setForeground(QColor(f"#{token_style['color']}"))
