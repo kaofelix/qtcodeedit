@@ -47,7 +47,10 @@ class CodeEdit(QPlainTextEdit):
     def themes(self):
         return get_all_styles()
 
-    def setLanguage(self, language: Language):
+    def setLanguage(self, language: Language | str):
+        if isinstance(language, Language):
+            language = language.alias
+
         self.highlighter.setLexer(language)
 
     def setTheme(self, theme):
