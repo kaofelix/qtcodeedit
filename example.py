@@ -1,6 +1,13 @@
 import sys
 
-from qtpy.QtWidgets import QApplication, QComboBox, QHBoxLayout, QVBoxLayout, QWidget
+from qtpy.QtWidgets import (
+    QApplication,
+    QCheckBox,
+    QComboBox,
+    QHBoxLayout,
+    QVBoxLayout,
+    QWidget,
+)
 
 from qtcodeedit import CodeEdit
 
@@ -31,6 +38,11 @@ if __name__ == "__main__":
     theme_combobox.currentTextChanged.connect(code_edit.setTheme)
     theme_combobox.setCurrentText("solarized-light")
     control_layout.addWidget(theme_combobox)
+
+    toggle_line_numbers_checkbox = QCheckBox(text="Show Line Numbers")
+    toggle_line_numbers_checkbox.setChecked(True)
+    toggle_line_numbers_checkbox.toggled.connect(code_edit.setShowLineNumbers)
+    control_layout.addWidget(toggle_line_numbers_checkbox)
 
     window.show()
 

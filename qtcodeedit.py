@@ -53,6 +53,9 @@ class CodeEdit(QPlainTextEdit):
     def setTheme(self, theme):
         self.highlighter.setStyle(theme)
 
+    def setShowLineNumbers(self, show: bool):
+        self.lineNumberArea.setVisible(show)
+
     def _updatePalette(self):
         self.setPalette(self.highlighter.stylePalette())
 
@@ -127,7 +130,7 @@ class LineNumberArea(QWidget):
         self.editor.installEventFilter(self)
         self.editor.updateRequest.connect(self._onEditorUpdateRequest)
         self.editor.blockCountChanged.connect(self._updateWidth)
-        self._updateWidth(self.editor.blockCount())
+        self._updateWidth()
 
     def paintEvent(self, event):
         painter = QPainter(self)
@@ -146,6 +149,14 @@ class LineNumberArea(QWidget):
             top = bottom
             bottom = top + self._blockHeight(block)
 
+    def showEvent(self, event):
+        super().showEvent(event)
+        self._updateWidth()
+
+    def hideEvent(self, event):
+        super().hideEvent(event)
+        self._updateWidth()
+
     def eventFilter(self, watched: QObject, event: QEvent):
         if watched is not self.editor and event.type() != QEvent.Type.Resize:
             return False
@@ -154,7 +165,12 @@ class LineNumberArea(QWidget):
         self.setGeometry(cr.left(), cr.top(), self.width(), cr.height())
         return False
 
-    def _updateWidth(self, lineCount):
+    def _updateWidth(self, _=None):
+        if not self.isVisible():
+            self.editor.setViewportMargins(0, 0, 0, 0)
+            return
+
+        lineCount = self.editor.blockCount()
         digits = max(self.MIN_DIGITS, len(str(lineCount)))
         charWidth = self.fontMetrics().horizontalAdvance("9")
         space = 3 + self.MARGIN_RIGHT + charWidth * digits
