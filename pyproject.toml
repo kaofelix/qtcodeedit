@@ -6,7 +6,7 @@ authors = [
 version = "0.1.0"
 description = "A code editing widget for PyQt and PySide"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.10"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
@@ -14,7 +14,7 @@ classifiers = [
 ]
 dependencies = [
     "pygments>=2.18.0",
-    "pyside6>=6.7.2",
+    "pyside6>=6.2.0",
     "qtpy>=2.4.1",
 ]
 
@@ -27,6 +27,7 @@ dev-dependencies = [
     "pytest>=8.3.3",
     "pytest-qt>=4.4.0",
     "ruff>=0.6.7",
+    "tox>=4.21.2",
 ]
 
 [build-system]
