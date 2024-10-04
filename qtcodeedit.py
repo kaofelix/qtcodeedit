@@ -9,6 +9,7 @@ from qtpy.QtCore import QEvent, QObject, QRect, Qt, Signal
 from qtpy.QtGui import (
     QColor,
     QFont,
+    QFontDatabase,
     QKeyEvent,
     QPainter,
     QPalette,
@@ -34,10 +35,8 @@ class CodeEdit(QPlainTextEdit):
         super().__init__()
         self._indentation_mode = self.Indent.WithSpaces
 
-        font = QFont()
-        font.setFamily("Menlo")
+        font = QFontDatabase.systemFont(QFontDatabase.SystemFont.FixedFont)
         font.setPointSize(14)
-        font.setFixedPitch(True)
         self.setFont(font)
 
         self.highlighter = PygmentsSyntaxHighlighter(self.document())
